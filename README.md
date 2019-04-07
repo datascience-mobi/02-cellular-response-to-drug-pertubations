@@ -1,166 +1,252 @@
-Topic 1 : Genetic interactions and cancer cell survival
-================
-Project overview and guidelines
+# Topic 2 : Cellular response to drug perturbations
 
--   [Introduction](#introduction)
--   [Objective](#objective)
--   [Description of datasets](#description-of-datasets)
--   [Literature review](#literature-review)
-    -   [Reviews](#reviews)
-    -   [Experimental methods](#experimental-methods)
-    -   [Computational methods](#computational-methods)
--   [How to structure your project](#how-to-structure-your-project)
-    -   [Project proposal](#project-proposal)
-    -   [Project](#project)
+*Project overview and guidelines*
 
-Supervisor:
+* [Introduction](#Introduction)
+* [Objectives](#Objectives)
+    - [Broad analysis](#Broad-analysis)
+    - [Specific analysis](#Specific-analysis)
+* [Description of data sets](#Description-of-data-sets)
+* [Literature review](#Literature-review)
+* [How to structure your project](#How-to-structure-your-project)
+    - [Project proposal](#Project-proposal)
+    - [Project](#Project)
+* [Glosary](#Glosary)
 
--   Carl Herrmann (<carl.herrmann@uni-heidelberg.de>)
--   Ashwini Sharma (<ashwini.sharma@uni-heidelberg.de>)
+Supervisors:
+* Nicolàs Palacio-Escat (nicolas.palacio@bioquant.uni-heidelberg.de)
+* Javier Perales-Patón (javier.perales@bioquant.uni-heidelberg.de)
 
-Introduction
-------------
+## Introduction
+Cancer is a generic term for a heterogeneous group of diseases that arise in
+different parts of the body. Cancer stems from genetic alterations that
+transform normal cells into malignant cells. These malignant cells are
+characterized by an uncontrolled growth and resistance to apoptosis (programmed
+cell death). This malignant behavior is mainly achieved through genetic
+alterations that affect the activity and wiring of many molecular mechanisms
+like signaling and metabolic pathways. Therefore cancer cells hijack many
+cellular processes enabling them to proliferate uncontrollably, avoid apoptosis
+and/or immune response, migrate to other tissues (metastasis) or even obtain
+drug resistance. Moreover, large-scale studies from international cancer
+consortia have described that patients' tumors acquire this malignancy through
+diverse individual molecular alterations. In other words, individual cancers
+are different each other.
 
-Genes rarely act alone, but rather in concert with others. In a signalling or a metabolic pathway, a single gene (and its translated product - protein) is not reflective of the final signalling or metabolic pathway activity. However, different genes act together (some activating, some repressing while others neutral) resulting in the net pathway output.
+Cancer therapies aim to develop drugs that exploit these diverse aberrant
+characteristics in a targeted manner, potentially resulting in an effective
+inhibition of the cancer cells' growth with lesser toxicity for the patients.
+These include **chemotherapy agents** that generally deplete dividing cells
+through the disruption of DNA replication or chromosomal segregation. On the
+other hand, **targeted therapies** hit particular key molecules (usually
+proteins) involved in deregulation of a particular biological pathway that
+provides benefit for the cancer cells.
 
-The aim of this project is to identify **genetic interactions** and their consequent effect on cancer cell survival. Cancer is a disease of accumulated defects (mutations, copy number changes, aneuploidies etc) in the genome. While the number of genomic defects in different cancers might vary from very few to thousands, only a handful of them are driving the process of oncogenesis. These *driver mutations* are observed in the highest frequencies, significantly enriched over the background mutation rates while the rest are typically irrelevant *passenger mutations*.
+This data set is indented to show how cancer cells respond to well established
+anti-cancer agents in terms of **transcriptome modulation** and **cell growth**
+after their exposure to the drug.
 
-In practice, these driver genes can mostly not be targeted by drugs. This is mainly because the driver genes are often highly essential for normal cell survival too. As a result, the anti-cancer drugs cannot discriminate between cancer and normal cells. An alternative strategy consists in targeting some other genes that interact with the driver genes in the cancer cell but not in the normal cells.
+## Objectives
+The main objective is that the students look into the different cellular
+responses to drug perturbations in the comprehensive data set of the
+NCI-60<sup>[1](#Original-paper-of-the-data-set)</sup>. For this,
+transcriptomics and drug sensitivity data are provided already formatted and
+subsetted. The student should explore the heterogeneous drug response to 15
+anti-cancer agents, followed by a more comprehensive understanding of a more
+specific case-study.
 
-<img src="GraphicalAbstractDataScience.png" alt="Fig. 1 - Genetic interactions in cancer" width="60%" />
-<p class="caption">
-Fig. 1 - Genetic interactions in cancer
-</p>
+<img src="objectives.svg" alt="Summary of objectives" width="750"/>
 
-In Fig.1, some of the possible genetic interactions occurring in a cancer cell has been summarized. Lets imagine a driver mutation (red) that transforms a normal cell into a malignant cell which divides uncontrollably. However, its wild type (not mutated) counterpart (black) divides normally. Now, we cannot target the driver mutation (red) because it is also essential in the normal cells. So we instead try to find another gene (yellow, green and blue) which, when perturbed in combination with the driver mutation, reduces the cancer cell proliferation while having no effect in the wild type condition upon the same perturbation.
-</p>
-As a basis for this project, we will use a large dataset of cancer cell lines including a combination of gene expression data, information about mutations and copy number changes, as well as data on the sensitivity of the cell lines when certain genes are knocked-down (see below the detailled description).
+To address the main objective, the following individual objectives are proposed
+(note that the following steps are a suggestion, you can deviate from them or
+use other approaches depending on your interests or findings):
 
-Objective
----------
+### Broad analysis
+* Explore gene expression profiles in treated and untreated profiles (e.g.
+density plots, violin or box plots, profile/correlation heatmap...).
+> Do they look already normalized?<br>
+> Could you identify number of batches from the data if any?
 
-The objective of this project is to achieve the following:
+* Explore the space of gene expression using **dimensionality reduction**
+methods such as PCA. Relate the **main latent factors** to the sample metadata
+(e.g. cell lines, tissue, drug mechanism of action, dose, time point, etc).
+> Is there any co-variate that correlates with the main aspects of
+transcriptional heterogeneity in the data set?
 
--   Choose a cancer type of interest (**Fig. 3**) with a complete genomic profile i.e. a cancer type with gene expression, gene copy number, gene mutation and CRISPR/Cas9 based gene knockdown data. The cancer type of interest must have at lest 20 representative cell lines.
+* Extract **individual gene expression signatures** by ranking the most
+differentially expressed genes using the log2 fold-change (FC) between treated
+and untreated conditions for each cell line at each time point and dose.
 
--   For the chosen cancer type, review recent literature to identify 3-5 most prominent mutations or genomic alterations driving the cancer growth (for example mutations in p53, EGFR, RB etc). A good starting point might be the [publications from the TCGA consortium](https://www.cancer.gov/about-nci/organization/ccg/research/structural-genomics/tcga/publications)
+    ```
+    log2(FC) = log2(gene expr in treated / gene expr in untreated)
+             = log2(gene expr in treated) - log2(gene expr in untreated)
+    ```
 
--   Ideally, chose those driver alterations which are difficult to target clinically (for example p53)
+    > **Note:** These *individual gene expression signatures* are individual
+    for each cell line. Since there are no technical replicates, these must be
+    taken with caution.
 
--   Identify appropriate cell line models to study the specific genomic alteration in a cancer type of interest. For instance, if you chose to focus on p53 mutation for a particular cancer type, segregate cell lines for that cancer type with or without p53 mutations. This way you can check many of your hypothesis like
-    -   What happens when there is p53 mutation vs no p53 mutation
-    -   If I observe something in p53 mutated scenario, do I still observe this in a non p53 mutated scenario
-    -   How confident am I to claim that something is exclusively p53 mutation related effect etc
--   In the cancer type of your interest, for the chosen driver alteration, find which are the most correlated mutations or copy number changes associated with the driver alterations.
+* Repeat the exploratory analysis on the matrix of log2 FC using
+**dimensionality reduction** methods. Relate with co-variates.
+> Do they still preserved the original patterns observed at first glance?
 
--   Find if there is functional/biological relationship between these correlated alterations. For example are they in the same pathways as the driver mutation, are they part of the same protein complex etc. Use relevant publicly available databases to get these information.
+### Specific analysis
+From now on, focus your analysis in one particular anti-cancer agent from the
+data set: **Choose one particular targeted therapy or a chemotherapy agent**.
 
--   Find if there are clinically approved drugs for any of the correlated alterations. Use relevant publicly available databases to get these information.
+#### Enrich your metadata annotation
+* **Review literature** to understand what are the main factors driving the
+drug sensitivity (e.g. inhibition of cancer cell growth) of the chosen drug
+like for instance: mutational status or amplification of certain proteins, gene
+over-expression, microsatellite instability, cell division rate, impaired DNA
+repair, etc
+* **Collect functional annotation of the drug response biomarkers**. Use the
+supplementary data of **basal molecular profiles** of the cell lines (from CCLE
+data portal) to extend the cell line annotation with those biomarkers of drug
+response (mutations, gene copy-number, over-expression, ...).
 
--   Make a coherent report of your complete analysis and results using R markdown.
+#### Dissect transcriptional changes of drug perturbation in cancer cell lines
+* **Perform a genome-wide t-test between treated and untreated cell lines that
+belong to a chosen tissue of interest**. For this, you have to perform multiple
+individual t-tests along the transcriptome (e.g. one t-test per gene), in order
+to assess the differential gene expression between treated and untreated cell
+lines. Different cell lines that belong to the chosen tissue can be used as
+biological replicates.
+* Use the drug response **biomarkers to dissect patterns of transcriptome
+modulation (clusters) using PCA**. You can stratify cell lines based on the
+mutational status of the drug's biomarkers.
 
-<img src="SampleCounts.svg" alt="Fig. 2 - Number of cell lines per cancer type" width="50%" />
-<p class="caption">
-Fig. 2 - Number of cell lines per cancer type
-</p>
+#### Model drug sensitivity based on the collected biomarkers
+* **Perform an exploratory analysis** similarly to the one done for the broad
+analysis of the perturbation data.
+* Model the drug response based on the insight obtained in previous steps (e.g. which biomarkers or covariates explain better the drug response). Use linear
+models (remember that the data can be log-transformed).
+* **[Optional]** Explore other advanced methods for gene expression analysis
+such as the inference pathway activities. Relate to [Further reading: omics
+data analysis](#Advanced-methods). Test if these pathway activities better
+correlate with drug sensitivity rather than the specific biomarkers found in
+the literature.
 
-Description of datasets
------------------------
+## Description of data sets
+Data matrices stored in individual RDS (R data format) and TSV files are
+provided at:
 
-We have provided a R list object (as a .RDS file). Load it as below -
+* **Drug perturbation data from cell lines** (transcriptome modulation and
+inhibition of cell growth)
+  - Gene Expression profiles: https://figshare.com/s/db1411debcfbe2618d2f
+  - Drug sensitivity assay: https://figshare.com/s/074e0120fe5e682f3d14
+* **Basal molecular profiles** of cancer cell lines (mutations + gene
+copy number alterations + basal gene expression):
+https://figshare.com/s/fc0c71246dc192982a3c
+* **Feature annotation** (cell lines and drugs):
+https://figshare.com/s/efb6a529eaf2d4dc6432
 
-``` r
-readRDS("path/to/your/directory/DepMap19Q1_allData.RDS")
-names(allDepMapData)
-[1] "expression" "copynumber" "mutation"   "kd.ceres"   "kd.prob"    "annotation"
+Please **download** every single file described in the three repositories
+above. The files are summarized bellow:
+
+| Type | Filename | R object | Description |
+| --- | ---- | --- | --- |
+| Drug perturbation | `NCI_TPW_gep_treated.rds`  | Matrix  | Gene expression profiling of transcriptome modulation after drug exposure - **treated cell lines**. Rows are genes, and columns are the samples. Gene expression values are log2-transformed. <br> Source: NCI-TPW |
+| Drug perturbation | `NCI_TPW_gep_untreated.rds`  | Matrix  | Gene expression profiling of transcriptome modulation after drug exposure - **untreated cell lines** (null concentration, controls). Rows are genes, and columns are the samples. Gene expression values are log2-transformed. <br> Source: NCI-TPW |
+| Drug perturbation | `NCI_TPW_metadata.tsv`  | data.frame | Experiment metadata for the gene expression profiling above. <br> Source: NCI-TPW |
+| Drug perturbation | `NegLogGI50.rds` | Matrix | Drug sensitivity profiling (50% growth inhibition). Rows are drugs, and columns are the cancer cell lines. Values are -log10 transformed of drug concentration required for 50% growth inhibition (EC50), thus higher values indicate more sensitivity. <br> Source: NCI-60 |
+| Basal molecular profile  | `CCLE_mutations.rds`  | data.frame  | Somatic mutations (Single-Nucleotide-Variants and INDELS) from cancer cell lines. The data is formatted as [MAF](https://docs.gdc.cancer.gov/Data/File_Formats/MAF_Format/#protected-maf-file-structure) <br> Source: CCLE |
+| Basal molecular profile | `CCLE_copynumber.rds` | data.frame | Gene Copy-number alterations. Values are log2-transformed gene copy-number ratio (i.e. log2(gene CN / 2); it is divided by 2 because in diploid genomes usually there are 2 copies of a gene. <br> Source: CCLE |
+| Basal molecular profiles  | `CCLE_basalexpression.rds` | data.frame  | Basal gene expression of cell lines. This might be useful to discern which cell lines over-expressed a gene as compared to the others. Values are log2-transformed. <br> Source: CCLE |
+| Feature annotation | `cellline_annotation.tsv` | data.frame | Initial cell line metadata. Please, expand with the omics profiles provided.  |
+| Feature annotation | `drug_annotation.tsv`  | data.frame | Drug annotation: mechanism of action, targets, etc. |
+
+You can load this data using the following function in `R`:
+
+```
+mat <- readRDS("filename.rds")
 ```
 
-The list named as `allDepMapData` consists of the following matrices -
+The **data types** are described as follows:
+* **Gene Expression** : These values reflect the level of gene expression,
+higher values suggests over expression of genes and vice-versa.
+* **Drug sensitivity** : It reflects the drug concentration required to inhibit
+the growth of a cancer cell by 50% (usually termed effective concentration to
+achieve half of the maximum response, shortened EC50). The values are in -log10
+scale of the concentration required for the 50% inhibition. Therefore, higher
+values indicate that the cell line is more sensitive to the drug than the
+others with lower values because it requires lower drug concentration to reach
+the 50% of growth inhibition.
+* **Gene Copy-Number Alterations** : Values are log2(CN ratio), thus log2(CN ratio)=0 indicate a neutral number of copies (2 copies in a diploid genome). Higher values indicates amplifications (e.g. log2(CN ratio) > 1) and lower values indicates deletions (e.g. log2(CN ratio) < -1).
+* **Somatic point mutations** : DNA mutation consequences of single-nucleotide variants and indels affecting protein coding genes.
 
--   Gene expression
-    -   This matrix consist of gene [TPM](https://www.rna-seqblog.com/rpkm-fpkm-and-tpm-clearly-explained/) (transcripts per million) values. These values reflect the level of gene expression, higher values suggests over expression of genes and vice versa. The rows of this matrix are the gene names and the columns are the cancer cell line identifiers.
--   Gene copy number
-    -   This matrix consist of gene copy number (CN) values. In absolute terms, CN = 2, since there are two alleles per genes. In cancer, genes might be amplified CN &gt; 2 or deleted CN &lt; 2. These values reflect the copy number level per gene, higher values means amplification of genes and vice versa. The rows of this matrix are the gene names and the columns are the cancer cell line identifiers.
--   Gene mutations
-    -   Is the annotation file for the various mutations observed in a sample. The `isDeleterious` flag specifies if mutation has a functional effect or not.
--   Gene knockdown (CERES)
-    -   This matrix consist of gene knockdown scores. The score is a measure of how essential/important is a particular gene for the cell survival. This score reflects whether upon knocking down that genes does the cell reduce its proliferation or increases it or has no change. Smaller values refers to higher essentiality. The rows of this matrix are the gene names and the columns are the cancer cell line identifiers.
--   Gene knockdown (Probability)
-    -   The probability value for the effect of the gene knockdown. A higher probability signifies that knocking down that particular gene very likely reduces cell proliferation.
--   Annotation
-    -   This matrix gives information regarding the cell lines. The `DepMap_ID` provides the uniform cell line identifiers used in all the data sets below. The `CCLE_Name` is encoded as *cell line name* \_ *Tissue of origin*. The columns `Primary.Disease` and `Subtype.Disease` refers to the tissue/tumor of origin.
+## Literature Review
+#### Original paper of the data set
+> Monks A *et al*. The NCI Transcriptional Pharmacodynamics Workbench: a tool
+to examine dynamic expression profiling of therapeutic response in the NCI-60
+cell line panel. **Cancer Res**. 2018 Dec 15;78(24):6807-6817. doi:
+[10.1158/0008-5472.CAN-18-0989](https://doi.org/10.1158/0008-5472.CAN-18-0989).<br>
+[Link to pubmed](https://www.ncbi.nlm.nih.gov/pubmed/30355619).
 
-Literature review
------------------
+#### Conceptual approach
+> Lamb J *et al*. The Connectivity Map: using gene-expression signatures to
+connect small molecules, genes, and disease. **Science**. 2006 Sep
+29;313(5795):1929-35. doi:
+[10.1126/science.1132939](https://doi.org/10.1126/science.1132939).
 
-#### Reviews
+#### Example of a good use of this kind of data
+> Chen B *et al*. Reversal of cancer gene expression correlates with drug
+efficacy and reveals therapeutic targets. **Nat Commun**. 2017 Jul 12;8:16022.
+doi: [10.1038/ncomms16022](https://doi.org/10.1038/ncomms16022).
 
-Read these reviews to gain some understanding of genetic interactions in cancer.
+#### Advanced methods
+These methods unlock the possibility to infer the transcription factor
+activities and pathway activities.
+* [PROGENy](https://saezlab.github.io/progeny/)
+* [DoRothEA](https://saezlab.github.io/DoRothEA/)
 
--   Ashworth, Alan, Christopher J. Lord, and Jorge S. Reis-Filho. "Genetic interactions in cancer progression and treatment." Cell 145.1 (2011): 30-38.
-
--   O'Neil, Nigel J., Melanie L. Bailey, and Philip Hieter. "Synthetic lethality and cancer." Nature Reviews Genetics 18.10 (2017): 613.
-
-#### Experimental methods
-
-An experimental example of killing ovarian cancer cells specifically with ARID1A mutation by inhibiting BRD2.
-
--   Berns, Katrien, et al. “ARID1A mutation sensitizes most ovarian clear cell carcinomas to BET inhibitors.” Oncogene (2018): 1.
-
-#### Computational methods
-
-Read these papers to understand how we can computationally identify novel genetic interactions in cancer
-
--   Jerby-Arnon, Livnat, et al. "Predicting cancer-specific vulnerability via data-driven detection of synthetic lethality." Cell 158.5 (2014): 1199-120
--   Rauscher, Benedikt, et al. "Toward an integrated map of genetic interactions in cancer cells." Molecular systems biology 14.2 (2018): e7656.
-
-How to structure your project
------------------------------
-
+## How to structure your project
 ### Project proposal
+You first task will be to define a project proposal, which should include:
+* List of planned analysis
+* Drug and tissue of interest for the specific analysis (**MUST** be different
+for each group).
+* Milestones (important achievements)
+* Deliverables (what kind of result(s) will we produce for each milestone?)
+* Approximate timetable
 
-You first task wil we to define a **project proposal**, which should include
-
--   list of planned analysis steps
--   milestones (important achievements)
--   deliverables (what kind of result will I produce for each milestone)?
--   approximate timetable
-
-You will present this project proposal together with a literature review on the subject 3 week after the begining of the semester (10 minute presentation + 5 minutes discussion).
+You will present this project proposal together with a literature review on the
+subject 3 weeks after the beginning of the semester (10 minutes presentation +
+5 minutes discussion).
 
 ### Project
+Your project **MUST** contain the following elements:
+* Descriptive statistics about the data sets, including graphical
+representations
+* A dimension reduction analysis (PCA, clustering or k-means, ...)
+* Statistical tests (t-test, proportion tests, etc)
+* A linear regression analysis, either uni- or multivariate
 
-You project **MUST** contain the following elements: \* *descriptive statistics* about the datasets, including *graphical representations* \* a *dimension reduction* analysis (PCA, clustering or k-means) \* *statistical tests* (t-test, proportion tests,...) \* a *linear regression* analysis, either uni- or multivariate
+#### General plan
+1. Familiarize with the data (descriptive statistics, basic plots, ...).
+2. Assess the need for normalization, batch correction and/or presence of
+outliers.
+3. Apply the changes if necessary and observe the results on the data
+distribution.
+4. Data reduction and pattern/cluster identification (may require literature
+and/or database research).
+5. Modeling drug-response and performance assessment.
 
-#### Data cleanup
+---
 
-You will be analyzing multiple genomic data sets together. It is essential that you explore each dataset and clean it. Cleaning can refer to many things:
-
--   Removing missing values
--   Imputing missing values
--   Removing low variance columns/rows
--   Removing batch effects
--   Removing outlier samples (only if it is due to technical issues !!)
--   Making sure that data is in the correct format, for example, numbers should be encoded as numeric and not as characters. Categorical variables should be factors etc.
--   Re-ordering rows/columns in meaningful and useful ways
-
-#### Data exploration
-
-Now that you have cleaned data, explore your data to understand its structure. Perform basic exploratory data analysis.
-
--   Look at the distribution of the overall data, specific samples or features.
--   Visualize the data distribution
--   Visualize the inter-dependencies among specific samples/features of interest
--   Check some of your hypothesis like - is something high/low between two conditions etc
-
-#### Data reduction
-
-You have a high dimension matrix, that is, you have way more features (~25000 genes) than observations (~30 samples).
-
--   Try out methods to reduce the dimensionality of this data.
--   Cluster your samples to identify similar and dis-similar groups
--   Check how well the groups separate based on the features of your interest
-
-#### Data modelling
-
-Imagine how you could try to *predict* sensitivity of cell lines to knockdown using other features as input. Test how well this might work. Alternatively, can you *predict* the impact of gene mutations or copy number alterations on the expression of that gene?
+## Glosary
+* **Cancer cell-line**: is an individual cell lineage of a cancer patient which
+has established during years. Cancer cell lines are fully profiled in terms of
+genomic aberrations, doubling time (cell division time), etc.
+* **Gene Expression Profile** (GEP): represents the gene-level measurements of
+a sample in terms of transcription levels (quantified transcripts).
+* **Drug sensitivity**: refers to the magnitude of sensitiveness in terms of
+cellular growth e.g. in the context of cancer cell-lines, usually is regarded
+as the level of growth inhibition.
+* **Targeted therapy**: refers to a treatment (usually a drug) whose mechanism
+of action is to target a specific molecule in a particular pathway, cellular
+process and/or cell type.
+* **Chemotherapy agent**: in contrast to targeted therapy, chemotherapy affects
+broader range of cellular processes or cells such as DNA replication, or cell
+stress. Since are citotoxic agents with a wider spectrum of action than
+targeted therapies, these are more toxic in terms of whole tissue/individual.
+* **PCA** : Principal Component Analysis.
