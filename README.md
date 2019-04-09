@@ -105,12 +105,10 @@ data portal) to extend the cell line annotation with those biomarkers of drug
 response (mutations, gene copy-number, over-expression, ...).
 
 #### Dissect transcriptional changes of drug perturbation in cancer cell lines
-* **Perform a genome-wide t-test between treated and untreated cell lines that
-belong to a chosen tissue of interest**. For this, you have to perform multiple
-individual t-tests along the transcriptome (e.g. one t-test per gene), in order
-to assess the differential gene expression between treated and untreated cell
-lines. Different cell lines that belong to the chosen tissue can be used as
-biological replicates.
+* **Perform a genome-wide t-test between treated and untreated cell lines**.
+For this, you have to perform multiple individual t-tests along the
+transcriptome (e.g. one t-test per gene), in order to assess the differential
+gene expression between treated and untreated cell lines.
 * Use the drug response **biomarkers to dissect patterns of transcriptome
 modulation (clusters) using PCA**. You can stratify cell lines based on the
 mutational status of the drug's biomarkers.
@@ -118,7 +116,8 @@ mutational status of the drug's biomarkers.
 #### Model drug sensitivity based on the collected biomarkers
 * **Perform an exploratory analysis** similarly to the one done for the broad
 analysis of the perturbation data.
-* Model the drug response based on the insight obtained in previous steps (e.g. which biomarkers or covariates explain better the drug response). Use linear
+* Model the drug response based on the insight obtained in previous steps (e.g.
+which biomarkers or covariates explain better the drug response). Use linear
 models (remember that the data can be log-transformed).
 * **[Optional]** Explore other advanced methods for gene expression analysis
 such as the inference pathway activities. Relate to [Further reading: omics
@@ -222,14 +221,20 @@ representations
 * A linear regression analysis, either uni- or multivariate
 
 #### General plan
-1. Familiarize with the data (descriptive statistics, basic plots, ...).
-2. Assess the need for normalization, batch correction and/or presence of
-outliers.
-3. Apply the changes if necessary and observe the results on the data
-distribution.
-4. Data reduction and pattern/cluster identification (may require literature
-and/or database research).
-5. Modeling drug-response and performance assessment.
+1. **Broad analysis** - All groups must perform the following (specific
+approaches may differ across groups):
+    * Familiarize with the data (descriptive statistics, basic plots, ...).
+    * Assess the need for normalization, batch correction and/or presence of
+    outliers.
+    * Apply the changes if necessary and observe the results on the data
+    distribution.
+    * Data reduction and pattern/cluster identification (may require
+    literature and/or database research).
+2. **Specific analysis** - Each group must choose a drug on which the
+following analysis will be focused:
+    * Metadata collection (literature, databases...).
+    * Statistical analysis of transcriptional changes upon drug treatment.
+    * Modeling drug-response and performance assessment.
 
 ---
 
