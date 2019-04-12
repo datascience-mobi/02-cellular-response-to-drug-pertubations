@@ -202,7 +202,7 @@ activities and pathway activities.
 ### Project proposal
 You first task will be to define a project proposal, which should include:
 * List of planned analysis
-* Drug and tissue of interest for the specific analysis (**MUST** be different
+* Choose a drug of interest for the specific analysis (**MUST** be different
 for each group).
 * Milestones (important achievements)
 * Deliverables (what kind of result(s) will we produce for each milestone?)
