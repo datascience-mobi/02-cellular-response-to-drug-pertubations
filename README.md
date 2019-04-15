@@ -17,6 +17,9 @@ Supervisors:
 * Nicolàs Palacio-Escat (nicolas.palacio@bioquant.uni-heidelberg.de)
 * Javier Perales-Patón (javier.perales@bioquant.uni-heidelberg.de)
 
+Tutor:
+* Julia Rühle ([julia.ruehle@web.de](mailto:julia.ruehle@web.de})
+
 ## Introduction
 Cancer is a generic term for a heterogeneous group of diseases that arise in
 different parts of the body. Cancer stems from genetic alterations that
