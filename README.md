@@ -1,4 +1,4 @@
-# Topic 2 : Cellular response to drug perturbations
+# Project 2 : Cellular response to drug perturbations
 
 *Project overview and guidelines*
 
