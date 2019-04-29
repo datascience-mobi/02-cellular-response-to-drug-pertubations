@@ -18,7 +18,7 @@ Supervisors:
 * Javier Perales-Patón (javier.perales@bioquant.uni-heidelberg.de)
 
 Tutor:
-* Julia Rühle ([julia.ruehle@web.de](mailto:julia.ruehle@web.de})
+* Julia Rühle ([julia.ruehle@web.de](mailto:julia.ruehle@web.de))
 
 ## Introduction
 Cancer is a generic term for a heterogeneous group of diseases that arise in
