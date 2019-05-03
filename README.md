@@ -190,16 +190,21 @@ connect small molecules, genes, and disease. **Science**. 2006 Sep
 29;313(5795):1929-35. doi:
 [10.1126/science.1132939](https://doi.org/10.1126/science.1132939).
 
-#### Example of a good use of this kind of data
-> Chen B *et al*. Reversal of cancer gene expression correlates with drug
+#### Further reading: getting biological insights derived from this kind of data
+* Chen B *et al*. Reversal of cancer gene expression correlates with drug
 efficacy and reveals therapeutic targets. **Nat Commun**. 2017 Jul 12;8:16022.
 doi: [10.1038/ncomms16022](https://doi.org/10.1038/ncomms16022).
+* Szalai B *et al*. Signatures of cell death and proliferation in perturbation transcriptomics data - from confounding factor to effective prediction. **bioRxiv** 2018. doi: [10.1101/454348](https://doi.org/10.1101/454348)
+* Iorio F *et al*. A Landscape of Pharmacogenomic Interactions in Cancer. **Cell**. 2016 Jul 28;166(3):740-754. doi: [10.1016/j.cell.2016.06.017](https://doi.org/10.1016/j.cell.2016.06.017)
+* Iorio F *et al*. Discovery of drug mode of action and drug repositioning from transcriptional responses. **Proc Natl Acad Sci U S A**. 2010 Aug 17;107(33):14621-6. doi: [10.1073/pnas.1000138107](https://doi.org/10.1073/pnas.1000138107)
+
 
 #### Advanced methods
 These methods unlock the possibility to infer the transcription factor
 activities and pathway activities.
 * [PROGENy](https://saezlab.github.io/progeny/)
 * [DoRothEA](https://saezlab.github.io/DoRothEA/)
+* [GSVA](https://bioconductor.org/packages/release/bioc/html/GSVA.html)
 
 ## How to structure your project
 ### Project proposal
